@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Farm - AI 工具与知识科普</title>
+    <meta name="description" content="AI Farm 提供各种 AI 工具和知识科普内容">
+    
+    <!-- 样式 -->
+    <link rel="stylesheet" href="/styles/main.css">
+    
+    <!-- Supabase SDK (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <!-- 头部 -->
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">🌾 AI Farm</h1>
+            <nav class="nav">
+                <a href="#home" class="nav-link">首页</a>
+                <a href="#tools" class="nav-link">AI 工具</a>
+                <a href="#knowledge" class="nav-link">知识科普</a>
+                <a href="#about" class="nav-link">关于</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="main">
+        <div class="container">
+            <!-- 欢迎区域 -->
+            <section class="hero">
+                <h2 class="hero-title">欢迎来到 AI Farm</h2>
+                <p class="hero-subtitle">探索 AI 的无限可能，学习前沿知识</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="testAPI()">测试 API 连接</button>
+                    <button class="btn btn-secondary" onclick="testSupabase()">测试数据库</button>
+                </div>
+            </section>
+
+            <!-- 状态信息 -->
+            <section class="status-section">
+                <div class="status-card">
+                    <h3>系统状态</h3>
+                    <div id="status-info" class="status-info">
+                        <p>加载中...</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 功能展示区 -->
+            <section class="features">
+                <h2 class="section-title">主要功能</h2>
+                <div class="feature-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🤖</div>
+                        <h3>AI 工具</h3>
+                        <p>提供各种实用的 AI 辅助工具</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📚</div>
+                        <h3>知识科普</h3>
+                        <p>深入浅出的 AI 知识分享</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">💡</div>
+                        <h3>实战案例</h3>
+                        <p>真实的应用场景和解决方案</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 AI Farm. All rights reserved.</p>
+            <p class="footer-tech">
+                Powered by <strong>Netlify</strong> + <strong>Supabase</strong>
+            </p>
+        </div>
+    </footer>
+
+    <!-- 脚本（使用 ES6 模块） -->
+    <script type="module" src="/scripts/supabase-client.js"></script>
+    <script type="module" src="/scripts/app.js"></script>
+</body>
+</html>
