@@ -176,28 +176,29 @@ function renderTools() {
  */
 function createToolCard(tool) {
     const featuredBadge = tool.is_featured ? '<span class="badge-featured">推荐</span>' : '';
-    const imageUrl = tool.image_url || '/images/placeholder.png';
+    const imageUrl = tool.image_url || 'https://via.placeholder.com/400x300?text=AI+Tool';
     const tags = tool.tags ? tool.tags.slice(0, 4) : [];
 
     return `
-        <div class="tool-card" data-tool-id="${tool.id}">
-            ${featuredBadge}
-            <div class="tool-image-wrapper">
-                <img src="${imageUrl}" alt="${tool.name}" class="tool-image" onerror="this.src='/images/placeholder.png'">
+        <div class="tool-card" onclick="showToolDetails('${tool.id}')">
+            <div class="tool-image-container">
+                ${featuredBadge}
+                <img src="${imageUrl}" alt="${tool.name}" class="tool-image" onerror="this.src='https://via.placeholder.com/400x300?text=AI+Tool'">
             </div>
             <div class="tool-content">
-                <h3 class="tool-name">${tool.name}</h3>
-                <p class="tool-description">${truncate(tool.description, 100)}</p>
+                <div class="tool-header">
+                    <h3 class="tool-name">${tool.name}</h3>
+                    <p class="tool-description">${truncate(tool.description, 100)}</p>
+                </div>
                 <div class="tool-tags">
                     ${tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
                 </div>
                 <div class="tool-footer">
                     <span class="tool-pricing">${tool.pricing || '价格未知'}</span>
+                    <a href="${tool.url}" target="_blank" rel="noopener" class="tool-link" onclick="event.stopPropagation()">
+                        访问 →
+                    </a>
                 </div>
-            </div>
-            <div class="tool-actions">
-                <button class="btn btn-secondary btn-sm" onclick="showToolDetails('${tool.id}')">详情</button>
-                <a href="${tool.url}"target="_blank" rel="noopener" class="btn btn-primary btn-sm">访问</a>
             </div>
         </div>
     `;
@@ -220,12 +221,11 @@ window.showToolDetails = function (toolId) {
         : '<p>暂无功能列表</p>';
 
     const tags = tool.tags ? tool.tags.map(tag => `<span class="tag">${tag}</span>`).join('') : '';
-
     modalBody.innerHTML = `
-        <div class="modal-header-content">
-            <img src="${tool.image_url || '/images/placeholder.png'}" alt="${tool.name}" class="modal-image" onerror="this.src='/images/placeholder.png'">
+        <div class="modal-header">
+            <img src="${tool.image_url || 'https://via.placeholder.com/200'}" alt="${tool.name}" class="modal-image" onerror="this.src='https://via.placeholder.com/200'">
             <div>
-                <h2>${tool.name}</h2>
+                <h2 class="modal-title">${tool.name}</h2>
                 <div class="modal-tags">${tags}</div>
             </div>
         </div>
@@ -239,10 +239,10 @@ window.showToolDetails = function (toolId) {
         </div>
         <div class="modal-section">
             <h3>定价信息</h3>
-            <p class="pricing-info">${tool.pricing || '价格未知'}</p>
+            <p style="color: var(--color-cta); font-weight: 600;">${tool.pricing || '价格未知'}</p>
         </div>
         <div class="modal-actions">
-            <a href="${tool.url}" target="_blank" rel="noopener" class="btn btn-primary btn-lg">
+            <a href="${tool.url}" target="_blank" rel="noopener" class="btn-primary btn-large">
                 访问 ${tool.name}
             </a>
         </div>

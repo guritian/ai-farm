@@ -1,92 +1,115 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Farm - AI 工具与知识科普</title>
-    <meta name="description" content="AI Farm 提供各种 AI 工具和知识科普内容">
-
-    <!-- 样式 -->
+    <title>AI Farm - 发现优质 AI 工具</title>
+    <meta name="description" content="精选最优质的 AI 工具和网站，提升您的生产力">
+    
+    <!-- Google Fonts - Space Grotesk + DM Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Main Styles -->
     <link rel="stylesheet" href="/styles/main.css">
-
-    <!-- Supabase SDK (CDN) -->
+    
+    <!-- Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
-
 <body>
-    <!-- 头部 -->
+    <!-- Header -->
     <header class="header">
         <div class="container">
-            <h1 class="logo">🌾 AI Farm</h1>
-            <nav class="nav">
-                <a href="/index.html" class="nav-link active">首页</a>
-                <a href="/tools.html" class="nav-link">AI 工具</a>
-                <a href="#knowledge" class="nav-link">知识科普</a>
-                <a href="#about" class="nav-link">关于</a>
-            </nav>
+            <div class="header-content">
+                <div class="logo-section">
+                    <h1 class="logo">AI Farm</h1>
+                    <p class="tagline">发现优质 AI 工具</p>
+                </div>
+                <div class="header-actions">
+                    <a href="https://github.com/guritian/ai-farm" target="_blank" rel="noopener" class="link-secondary">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.840 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.430.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
         </div>
     </header>
 
-    <!-- 主内容区 -->
+    <!-- Main Content -->
     <main class="main">
         <div class="container">
-            <!-- 欢迎区域 -->
-            <section class="hero">
-                <h2 class="hero-title">欢迎来到 AI Farm</h2>
-                <p class="hero-subtitle">探索 AI 的无限可能，学习前沿知识</p>
-                <div class="hero-buttons">
-                    <button class="btn btn-primary" onclick="testSupabase()">测试 Supabase 连接</button>
+            <!-- Search Section -->
+            <section class="search-section">
+                <div class="search-container">
+                    <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="M21 21l-4.35-4.35" stroke-linecap="round"/>
+                    </svg>
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        class="search-input" 
+                        placeholder="搜索 AI 工具..."
+                        aria-label="搜索工具"
+                    >
+                </div>
+                
+                <div class="filter-container">
+                    <div id="tagFilters" class="tag-filters"></div>
+                    <button class="btn-text" onclick="clearFilters()">清除筛选</button>
+                </div>
+
+                <div class="results-bar">
+                    <span id="resultsCount" class="results-text">加载中...</span>
                 </div>
             </section>
 
-            <!-- 状态信息 -->
-            <section class="status-section">
-                <div class="status-card">
-                    <h3>系统状态</h3>
-                    <div id="status-info" class="status-info">
-                        <p>加载中...</p>
+            <!-- Tools Grid -->
+            <section class="tools-section">
+                <div id="toolsGrid" class="tools-grid">
+                    <div class="loading-state">
+                        <div class="spinner"></div>
+                        <p>正在加载...</p>
                     </div>
                 </div>
-            </section>
 
-            <!-- 功能展示区 -->
-            <section class="features">
-                <h2 class="section-title">主要功能</h2>
-                <div class="feature-grid">
-                    <div class="feature-card">
-                        <div class="feature-icon">🤖</div>
-                        <h3>AI 工具</h3>
-                        <p>提供各种实用的 AI 辅助工具</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">📚</div>
-                        <h3>知识科普</h3>
-                        <p>深入浅出的 AI 知识分享</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">💡</div>
-                        <h3>实战案例</h3>
-                        <p>真实的应用场景和解决方案</p>
-                    </div>
+                <div id="emptyState" class="empty-state" style="display: none;">
+                    <svg class="empty-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="M21 21l-4.35-4.35" stroke-linecap="round"/>
+                    </svg>
+                    <h3>未找到匹配的工具</h3>
+                    <p>试试更改搜索关键词或筛选条件</p>
+                    <button class="btn-primary" onclick="clearFilters()">清除筛选</button>
                 </div>
             </section>
         </div>
     </main>
 
-    <!-- 页脚 -->
+    <!-- Tool Detail Modal -->
+    <div id="toolModal" class="modal" style="display: none;">
+        <div class="modal-overlay" onclick="closeModal()"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()" aria-label="关闭">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round"/>
+                </svg>
+            </button>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2026 AI Farm. All rights reserved.</p>
-            <p class="footer-tech">
-                Powered by <strong>Netlify</strong> + <strong>Supabase</strong>
-            </p>
+            <p>© 2026 AI Farm · Powered by Netlify & Supabase</p>
         </div>
     </footer>
 
-    <!-- 脚本（使用 ES6 模块） -->
+    <!-- Scripts -->
     <script type="module" src="/scripts/supabase-client.js"></script>
-    <script type="module" src="/scripts/app.js"></script>
+    <script type="module" src="/scripts/tools.js"></script>
 </body>
-
 </html>
