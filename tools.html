@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 工具库 - AI Farm</title>
+    <meta name="description" content="发现和探索最优质的 AI 工具和网站">
+
+    <!-- 样式 -->
+    <link rel="stylesheet" href="/styles/main.css">
+
+    <!-- Supabase SDK (CDN) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+    <!-- 头部 -->
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">🌾 AI Farm</h1>
+            <nav class="nav">
+                <a href="/index.html" class="nav-link">首页</a>
+                <a href="/tools.html" class="nav-link active">AI 工具</a>
+                <a href="#knowledge" class="nav-link">知识科普</a>
+                <a href="#about" class="nav-link">关于</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="main tools-page">
+        <div class="container">
+            <!-- 页面标题 -->
+            <section class="page-header">
+                <h2 class="page-title">AI 工具库</h2>
+                <p class="page-subtitle">发现最优质的 AI 工具，提升您的生产力</p>
+            </section>
+
+            <!-- 搜索和筛选 -->
+            <section class="tools-filters">
+                <div class="search-box">
+                    <input type="text" id="searchInput" class="search-input" placeholder="搜索工具名称或描述...">
+                </div>
+
+                <div class="filter-section">
+                    <div class="filter-header">
+                        <span class="filter-label">标签筛选：</span>
+                        <button class="btn-clear-filter" onclick="clearFilters()">清除筛选</button>
+                    </div>
+                    <div id="tagFilters" class="tag-filters"></div>
+                </div>
+
+                <div class="results-info">
+                    <span id="resultsCount" class="results-count">加载中...</span>
+                </div>
+            </section>
+
+            <!-- 工具网格 -->
+            <section class="tools-grid-section">
+                <div id="toolsGrid" class="tools-grid">
+                    <!-- 加载状态 -->
+                    <div class="loading-state">
+                        <div class="loading-spinner"></div>
+                        <p>正在加载 AI 工具...</p>
+                    </div>
+                </div>
+
+                <!-- 空状态 -->
+                <div id="emptyState" class="empty-state" style="display: none;">
+                    <div class="empty-icon">🔍</div>
+                    <h3>未找到符合条件的工具</h3>
+                    <p>试试更改筛选条件或搜索关键词</p>
+                    <button class="btn btn-primary" onclick="clearFilters()">清除筛选</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- 工具详情模态框 -->
+    <div id="toolModal" class="modal" style="display: none;">
+        <div class="modal-overlay" onclick="closeModal()"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div id="modalBody" class="modal-body">
+                <!-- 动态填充 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 AI Farm. All rights reserved.</p>
+            <p class="footer-tech">
+                Powered by <strong>Netlify</strong> + <strong>Supabase</strong>
+            </p>
+        </div>
+    </footer>
+
+    <!-- 脚本 -->
+    <script type="module" src="/scripts/supabase-client.js"></script>
+    <script type="module" src="/scripts/tools.js"></script>
+</body>
+
+</html>
