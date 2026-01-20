@@ -1,6 +1,6 @@
 /**
  * 主应用逻辑
- * 处理页面交互和 API 调用
+ * 处理页面交互和 Supabase 操作
  */
 
 import { testSupabaseConnection } from './supabase-client.js';
@@ -17,8 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
  * 初始化页面
  */
 function initializePage() {
-    updateStatus('应用已准备就绪');
-    checkSystemHealth();
+    updateStatus('应用已准备就绪 - 前端直连 Supabase 模式');
 }
 
 /**
@@ -37,59 +36,6 @@ function updateStatus(message, type = 'info') {
 }
 
 /**
- * 检查系统健康状态
- */
-async function checkSystemHealth() {
-    try {
-        const response = await fetch('/.netlify/functions/api/health');
-        const data = await response.json();
-
-        if (response.ok) {
-            console.log('✅ 系统健康检查通过:', data);
-            updateStatus(`系统状态: ${data.status} | 时间: ${new Date(data.timestamp).toLocaleString('zh-CN')}`, 'success');
-        } else {
-            console.warn('⚠️ 健康检查失败:', data);
-            updateStatus('后端 API 暂时不可用（可能是本地开发环境）', 'info');
-        }
-    } catch (error) {
-        console.warn('⚠️ 无法连接到后端 API:', error.message);
-        updateStatus('后端 API 未启动（本地开发请使用 netlify dev）', 'info');
-    }
-}
-
-/**
- * 测试 API 连接
- */
-window.testAPI = async function () {
-    updateStatus('正在测试 API 连接...', 'info');
-
-    try {
-        // 测试健康检查 API
-        const healthResponse = await fetch('/.netlify/functions/api/health');
-        const healthData = await healthResponse.json();
-
-        // 测试示例 API
-        const exampleResponse = await fetch('/.netlify/functions/api/example');
-        const exampleData = await exampleResponse.json();
-
-        console.log('✅ API 测试结果:');
-        console.log('健康检查:', healthData);
-        console.log('示例 API:', exampleData);
-
-        updateStatus(
-            `✅ API 连接成功！健康状态: ${healthData.status} | 示例数据: ${JSON.stringify(exampleData)}`,
-            'success'
-        );
-    } catch (error) {
-        console.error('❌ API 测试失败:', error);
-        updateStatus(
-            `❌ API 连接失败: ${error.message}。请确保使用 'netlify dev' 启动本地服务器。`,
-            'error'
-        );
-    }
-};
-
-/**
  * 测试 Supabase 连接
  */
 window.testSupabase = async function () {
@@ -104,7 +50,7 @@ window.testSupabase = async function () {
         } else {
             console.warn('⚠️ Supabase 测试失败:', result);
             updateStatus(
-                `⚠️ ${result.message}。请检查 .env 文件中的 Supabase 配置。`,
+                `⚠️ ${result.message}。请检查环境变量配置。`,
                 'error'
             );
         }
@@ -115,4 +61,4 @@ window.testSupabase = async function () {
 };
 
 // 导出函数供其他模块使用
-export { updateStatus, checkSystemHealth };
+export { updateStatus };

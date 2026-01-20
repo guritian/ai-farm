@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AI Farm - AI 工具与知识科普</title>
     <meta name="description" content="AI Farm 提供各种 AI 工具和知识科普内容">
-    
+
     <!-- 样式 -->
     <link rel="stylesheet" href="/styles/main.css">
-    
+
     <!-- Supabase SDK (CDN) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
+
 <body>
     <!-- 头部 -->
     <header class="header">
@@ -34,8 +36,7 @@
                 <h2 class="hero-title">欢迎来到 AI Farm</h2>
                 <p class="hero-subtitle">探索 AI 的无限可能，学习前沿知识</p>
                 <div class="hero-buttons">
-                    <button class="btn btn-primary" onclick="testAPI()">测试 API 连接</button>
-                    <button class="btn btn-secondary" onclick="testSupabase()">测试数据库</button>
+                    <button class="btn btn-primary" onclick="testSupabase()">测试 Supabase 连接</button>
                 </div>
             </section>
 
@@ -87,4 +88,5 @@
     <script type="module" src="/scripts/supabase-client.js"></script>
     <script type="module" src="/scripts/app.js"></script>
 </body>
+
 </html>
