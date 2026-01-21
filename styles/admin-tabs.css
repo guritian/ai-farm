@@ -1,0 +1,112 @@
+/* ===================================
+   Tab Navigation
+   =================================== */
+.admin-tabs {
+    background: var(--color-surface);
+    border-bottom: 1px solid var(--color-border);
+    position: sticky;
+    top: 70px;
+    z-index: 40;
+}
+
+.tab-list {
+    display: flex;
+    gap: var(--space-sm);
+}
+
+.tab-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-md) var(--space-lg);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    font-family: var(--font-heading);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    transition: all 200ms ease;
+}
+
+.tab-btn:hover {
+    color: var(--color-text);
+    background: var(--color-background);
+}
+
+.tab-btn.active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+}
+
+.tab-btn svg {
+    opacity: 0.7;
+    transition: opacity 200ms ease;
+}
+
+.tab-btn.active svg {
+    opacity: 1;
+}
+
+.tab-content {
+    animation: fadeInUp 300ms ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===================================
+   Tutorial Content Type Badges
+   =================================== */
+.type-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.type-badge.type-markdown {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3B82F6;
+}
+
+.type-badge.type-url {
+    background: rgba(16, 185, 129, 0.1);
+    color: #10B981;
+}
+
+.type-badge.type-video {
+    background: rgba(239, 68, 68, 0.1);
+    color: #EF4444;
+}
+
+/* Select dropdown styling */
+.form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 0.875rem;
+    font-family: var(--font-body);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-surface);
+    transition: all 200ms ease;
+    cursor: pointer;
+}
+
+.form-group select:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}

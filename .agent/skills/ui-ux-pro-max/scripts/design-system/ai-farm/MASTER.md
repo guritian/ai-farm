@@ -7,8 +7,8 @@
 ---
 
 **Project:** AI Farm
-**Generated:** 2026-01-20 17:30:35
-**Category:** Biotech / Life Sciences
+**Generated:** 2026-01-20 17:16:54
+**Category:** Wedding/Event Planning
 
 ---
 
@@ -18,24 +18,22 @@
 
 | Role | Hex | CSS Variable |
 |------|-----|--------------|
-| Primary | `#3B82F6` | `--color-primary` |
-| Secondary | `#60A5FA` | `--color-secondary` |
+| Primary | `#2563EB` | `--color-primary` |
+| Secondary | `#3B82F6` | `--color-secondary` |
 | CTA/Accent | `#F97316` | `--color-cta` |
 | Background | `#F8FAFC` | `--color-background` |
 | Text | `#1E293B` | `--color-text` |
 
-**Color Notes:** Fresh Blue (#00B4D8) + Clean White + Green
-
 ### Typography
 
-- **Heading Font:** Plus Jakarta Sans
-- **Body Font:** Plus Jakarta Sans
-- **Mood:** friendly, modern, saas, clean, approachable, professional
-- **Google Fonts:** [Plus Jakarta Sans + Plus Jakarta Sans](https://fonts.google.com/share?selection.family=Plus+Jakarta+Sans:wght@300;400;500;600;700)
+- **Heading Font:** Fredoka
+- **Body Font:** Nunito
+- **Mood:** playful, friendly, fun, creative, warm, approachable
+- **Google Fonts:** [Fredoka + Nunito](https://fonts.google.com/share?selection.family=Fredoka:wght@400;500;600;700|Nunito:wght@300;400;500;600;700)
 
 **CSS Import:**
 ```css
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@300;400;500;600;700&display=swap');
 ```
 
 ### Spacing Variables
@@ -85,8 +83,8 @@
 /* Secondary Button */
 .btn-secondary {
   background: transparent;
-  color: #3B82F6;
-  border: 2px solid #3B82F6;
+  color: #2563EB;
+  border: 2px solid #2563EB;
   padding: 12px 24px;
   border-radius: 8px;
   font-weight: 600;
@@ -125,9 +123,9 @@
 }
 
 .input:focus {
-  border-color: #3B82F6;
+  border-color: #2563EB;
   outline: none;
-  box-shadow: 0 0 0 3px #3B82F620;
+  box-shadow: 0 0 0 3px #2563EB20;
 }
 ```
 
@@ -153,28 +151,28 @@
 
 ## Style Guidelines
 
-**Style:** Vibrant & Block-based
+**Style:** Soft UI Evolution
 
-**Keywords:** Bold, energetic, playful, block layout, geometric shapes, high color contrast, duotone, modern, energetic
+**Keywords:** Evolved soft UI, better contrast, modern aesthetics, subtle depth, accessibility-focused, improved shadows, hybrid
 
-**Best For:** Startups, creative agencies, gaming, social media, youth-focused, entertainment, consumer
+**Best For:** Modern enterprise apps, SaaS platforms, health/wellness, modern business tools, professional, hybrid
 
-**Key Effects:** Large sections (48px+ gaps), animated patterns, bold hover (color shift), scroll-snap, large type (32px+), 200-300ms
+**Key Effects:** Improved shadows (softer than flat, clearer than neumorphism), modern (200-300ms), focus visible, WCAG AA/AAA
 
 ### Page Pattern
 
-**Pattern Name:** Minimal Single Column
+**Pattern Name:** Marketplace / Directory
 
-- **Conversion Strategy:** Single CTA focus. Large typography. Lots of whitespace. No nav clutter. Mobile-first.
-- **CTA Placement:** Center, large CTA button
-- **Section Order:** 1. Hero headline, 2. Short description, 3. Benefit bullets (3 max), 4. CTA, 5. Footer
+- **Conversion Strategy:**  map hover pins
+- **CTA Placement:** Hero Search Bar + Navbar 'List your item'
+- **Section Order:** 1. Hero (Search focused), 2. Categories, 3. Featured Listings, 4. Trust/Safety, 5. CTA (Become a host/seller)
 
 ---
 
 ## Anti-Patterns (Do NOT Use)
 
-- ❌ Flat design without depth
-- ❌ Text-heavy pages
+- ❌ Generic templates
+- ❌ No portfolio
 
 ### Additional Forbidden Patterns
 

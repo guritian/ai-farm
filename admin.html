@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Farm - 内容管理</title>
+    <meta name="description" content="AI Farm 本地内容管理工具">
+
+    <!-- Google Fonts - Space Grotesk + DM Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="/styles/admin.css">
+    <link rel="stylesheet" href="/styles/admin-tabs.css">
+
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="admin-header">
+        <div class="admin-container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <h1 class="logo">JDY AI Farm 管理后台</h1>
+                    <p class="tagline">本地内容管理工具</p>
+                </div>
+                <div class="header-actions">
+                    <span id="connectionStatus" class="connection-status">检查连接...</span>
+                    <a href="/index.html" class="btn-link">返回前台</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Tab Navigation -->
+    <nav class="admin-tabs">
+        <div class="admin-container">
+            <div class="tab-list">
+                <button class="tab-btn active" onclick="switchAdminTab('tools')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path
+                            d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z" />
+                    </svg>
+                    AI 工具管理
+                </button>
+                <button class="tab-btn" onclick="switchAdminTab('tutorials')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                        <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                    </svg>
+                    教程管理
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+        <div class="admin-container">
+            <!-- Config Warning (shown if Service Key not configured) -->
+            <div id="configWarning" class="alert alert-warning" style="display: none;">
+                <h3>⚠️ 配置未完成</h3>
+                <p>请在 <code>scripts/admin.js</code> 中配置您的 Supabase Service Key。</p>
+                <p>详细说明请查看代码注释。</p>
+            </div>
+
+
+            <!-- Tools Management Tab Content -->
+            <div id="toolsTab" class="tab-content active">
+                <!-- Tools Management Section -->
+                <section class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">AI 工具管理</h2>
+                        <button id="addToolBtn" class="btn-primary" onclick="openAddToolForm()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19" stroke-linecap="round" />
+                                <line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round" />
+                            </svg>
+                            添加工具
+                        </button>
+                    </div>
+
+                    <!-- Search and Filter -->
+                    <div class="toolbar">
+                        <div class="search-box">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="11" cy="11" r="8" />
+                                <path d="M21 21l-4.35-4.35" stroke-linecap="round" />
+                            </svg>
+                            <input type="text" id="searchInput" placeholder="搜索工具名称或描述..." class="search-input">
+                        </div>
+                        <button onclick="clearFilters()" class="btn-secondary">清除筛选</button>
+                    </div>
+
+                    <!-- Tools Table -->
+                    <div class="table-container">
+                        <table class="tools-table" id="toolsTable">
+                            <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>描述</th>
+                                    <th>标签</th>
+                                    <th>定价</th>
+                                    <th>推荐</th>
+                                    <th>创建时间</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="toolsTableBody">
+                                <tr>
+                                    <td colspan="7" class="loading-row">
+                                        <div class="spinner"></div>
+                                        <p>加载中...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="emptyState" class="empty-state" style="display: none;">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path
+                                d="M20 7h-7l-2-2H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z" />
+                        </svg>
+                        <h3>暂无工具</h3>
+                        <p>点击"添加工具"按钮创建第一个 AI 工具</p>
+                        <button onclick="openAddToolForm()" class="btn-primary">添加第一个工具</button>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Tutorials Management Tab Content -->
+            <div id="tutorialsTab" class="tab-content" style="display: none;">
+                <!-- Tutorials Management Section -->
+                <section class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">教程管理</h2>
+                        <button class="btn-primary" onclick="openAddTutorialForm()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19" stroke-linecap="round" />
+                                <line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round" />
+                            </svg>
+                            添加教程
+                        </button>
+                    </div>
+
+                    <!-- Search and Filter -->
+                    <div class="toolbar">
+                        <div class="search-box">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="11" cy="11" r="8" />
+                                <path d="M21 21l-4.35-4.35" stroke-linecap="round" />
+                            </svg>
+                            <input type="text" id="tutorialSearchInput" placeholder="搜索教程标题或作者..." class="search-input"
+                                oninput="onTutorialSearchInput()">
+                        </div>
+                        <button onclick="clearTutorialFilters()" class="btn-secondary">清除筛选</button>
+                    </div>
+
+                    <!-- Tutorials Table -->
+                    <div class="table-container">
+                        <table class="tools-table">
+                            <thead>
+                                <tr>
+                                    <th>标题</th>
+                                    <th>类型</th>
+                                    <th>作者</th>
+                                    <th>关联工具</th>
+                                    <th>推荐</th>
+                                    <th>创建时间</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tutorialsTableBody">
+                                <tr>
+                                    <td colspan="7" class="loading-row">
+                                        <div class="spinner"></div>
+                                        <p>加载中...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="tutorialsEmptyState" class="empty-state" style="display: none;">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+                            <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+                        </svg>
+                        <h3>暂无教程</h3>
+                        <p>点击"添加教程"按钮创建第一个教程</p>
+                        <button onclick="openAddTutorialForm()" class="btn-primary">添加第一个教程</button>
+                    </div>
+                </section>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Tutorial Add/Edit Modal -->
+    <div id="tutorialModal" class="modal" style="display: none;">
+        <div class="modal-overlay" onclick="closeTutorialModal()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="tutorialModalTitle">添加教程</h2>
+                <button class="modal-close" onclick="closeTutorialModal()" aria-label="关闭">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" />
+                    </svg>
+                </button>
+            </div>
+
+            <form id="tutorialForm" class="tool-form" onsubmit="handleTutorialSubmit(event)">
+                <input type="hidden" id="tutorialId" value="">
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tutorialTitle">教程标题 <span class="required">*</span></label>
+                        <input type="text" id="tutorialTitle" required placeholder="例：ChatGPT 快速入门">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tutorialAuthor">作者 <span class="required">*</span></label>
+                        <input type="text" id="tutorialAuthor" required placeholder="例：张三">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="contentType">内容类型 <span class="required">*</span></label>
+                    <select id="contentType" required onchange="onContentTypeChange()">
+                        <option value="markdown">Markdown 文档</option>
+                        <option value="url">外部链接</option>
+                        <option value="video">视频教程</option>
+                    </select>
+                    <small>选择教程的内容类型</small>
+                </div>
+
+                <!-- Markdown Content -->
+                <div id="markdownGroup" class="form-group">
+                    <label for="tutorialContentMd">Markdown 内容 <span class="required">*</span></label>
+                    <textarea id="tutorialContentMd" rows="15" placeholder="# 教程标题\n\n教程内容..." required></textarea>
+                    <small>支持完整的 Markdown 语法</small>
+                </div>
+
+                <!-- External URL -->
+                <div id="urlGroup" class="form-group" style="display: none;">
+                    <label for="tutorialExternalUrl">外部链接 / 视频链接 <span class="required">*</span></label>
+                    <input type="url" id="tutorialExternalUrl" placeholder="https://example.com/tutorial">
+                    <small>教程或视频的完整 URL 地址</small>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tutorialCoverImage">封面图 URL</label>
+                        <input type="url" id="tutorialCoverImage" placeholder="https://example.com/cover.jpg">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="tutorialToolId">关联 AI 工具</label>
+                        <select id="tutorialToolId">
+                            <option value="">无（通用教程）</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="tutorialSummary">摘要</label>
+                    <textarea id="tutorialSummary" rows="2" placeholder="简短描述教程内容..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="tutorialTags">标签（逗号分隔）</label>
+                    <input type="text" id="tutorialTags" placeholder="ChatGPT, AI助手, 入门">
+                    <small>多个标签请用英文逗号分隔</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="tutorialIsFeatured">
+                        <span>设为推荐教程</span>
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" onclick="closeTutorialModal()" class="btn-secondary">取消</button>
+                    <button type="submit" class="btn-primary" id="tutorialSubmitBtn">
+                        <span id="tutorialSubmitText">保存</span>
+                        <span id="tutorialSubmitLoading" style="display: none;">
+                            <div class="spinner-small"></div>
+                            保存中...
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Tutorial Delete Confirmation Modal -->
+    <div id="tutorialDeleteModal" class="modal" style="display: none;">
+        <div class="modal-overlay" onclick="closeTutorialDeleteModal()"></div>
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h2>确认删除</h2>
+                <button class="modal-close" onclick="closeTutorialDeleteModal()" aria-label="关闭">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>确定要删除教程 "<span id="deleteTutorialName"></span>" 吗？</p>
+                <p class="text-danger">此操作不可撤销！</p>
+            </div>
+            <div class="form-actions">
+                <button type="button" onclick="closeTutorialDeleteModal()" class="btn-secondary">取消</button>
+                <button type="button" onclick="confirmDeleteTutorial()" class="btn-danger" id="tutorialDeleteBtn">
+                    <span id="tutorialDeleteText">确认删除</span>
+                    <span id="tutorialDeleteLoading" style="display: none;">
+                        <div class="spinner-small"></div>
+                        删除中...
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Add/Edit Tool Modal -->
+    <div id="toolModal" class="modal" style="display: none;">
+        <div class="modal-overlay" onclick="closeToolModal()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">添加工具</h2>
+                <button class="modal-close" onclick="closeToolModal()" aria-label="关闭">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" />
+                    </svg>
+                </button>
+            </div>
+
+            <form id="toolForm" class="tool-form" onsubmit="handleToolSubmit(event)">
+                <input type="hidden" id="toolId" value="">
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="toolName">工具名称 <span class="required">*</span></label>
+                        <input type="text" id="toolName" name="name" required placeholder="例：ChatGPT">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="toolUrl">官网 URL <span class="required">*</span></label>
+                        <input type="url" id="toolUrl" name="url" required placeholder="https://example.com">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="toolDescription">工具描述 <span class="required">*</span></label>
+                    <textarea id="toolDescription" name="description" required rows="3"
+                        placeholder="简要描述这个工具的功能和用途"></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="toolImageUrl">图片 URL</label>
+                        <input type="url" id="toolImageUrl" name="image_url" placeholder="https://example.com/logo.png">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="toolPricing">定价信息</label>
+                        <input type="text" id="toolPricing" name="pricing" placeholder="例：免费 / $20/月">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="toolTags">标签（逗号分隔）</label>
+                    <input type="text" id="toolTags" name="tags" placeholder="AI助手, 文本生成, 热门">
+                    <small>多个标签请用英文逗号分隔</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="toolFeatures">主要功能（每行一个）</label>
+                    <textarea id="toolFeatures" name="features" rows="5" placeholder="功能1&#10;功能2&#10;功能3"></textarea>
+                    <small>每行输入一个功能</small>
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="toolIsFeatured" name="is_featured">
+                        <span>设为推荐工具</span>
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" onclick="closeToolModal()" class="btn-secondary">取消</button>
+                    <button type="submit" class="btn-primary" id="submitBtn">
+                        <span id="submitText">保存</span>
+                        <span id="submitLoading" style="display: none;">
+                            <div class="spinner-small"></div>
+                            保存中...
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal" style="display: none;">
+        <div class="modal-overlay" onclick="closeDeleteModal()"></div>
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h2>确认删除</h2>
+                <button class="modal-close" onclick="closeDeleteModal()" aria-label="关闭">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>确定要删除工具 "<span id="deleteToolName"></span>" 吗？</p>
+                <p class="text-danger">此操作不可撤销！</p>
+            </div>
+            <div class="form-actions">
+                <button type="button" onclick="closeDeleteModal()" class="btn-secondary">取消</button>
+                <button type="button" onclick="confirmDelete()" class="btn-danger" id="deleteBtn">
+                    <span id="deleteText">确认删除</span>
+                    <span id="deleteLoading" style="display: none;">
+                        <div class="spinner-small"></div>
+                        删除中...
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Tab Switching Logic -->
+    <script>
+        function switchAdminTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.closest('.tab-btn').classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+
+            if (tabName === 'tools') {
+                document.getElementById('toolsTab').style.display = 'block';
+            } else if (tabName === 'tutorials') {
+                document.getElementById('tutorialsTab').style.display = 'block';
+                // Initialize tutorials if not already done
+                if (!window.tutorialsInitialized) {
+                    window.initTutorials();
+                    window.tutorialsInitialized = true;
+                }
+            }
+        }
+    </script>
+
+    <!-- Scripts -->
+    <script type="module" src="/scripts/admin.js"></script>
+    <script type="module" src="/scripts/admin-tutorials.js"></script>
+</body>
+
+</html>

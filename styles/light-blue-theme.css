@@ -1,0 +1,196 @@
+/* ===================================
+   Light Blue Theme Enhancements
+   AI Farm - Beautiful Light Blue Design
+   =================================== */
+
+/* Override header with glass-morphism */
+.header {
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    border-bottom: 1px solid rgba(14, 165, 233, 0.15) !important;
+    box-shadow: 0 4px 24px rgba(14, 165, 233, 0.08),
+        0 1px 3px rgba(0, 0, 0, 0.04) !important;
+}
+
+/* Gradient logo */
+.logo {
+    background: linear-gradient(135deg, #0EA5E9, #38BDF8) !important;
+    -webkit-background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    background-clip: text !important;
+}
+
+/* Enhanced tool cards with glass effect */
+.tool-card {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    border-radius: 20px !important;
+    padding: var(--space-xl) !important;
+    border: 1px solid rgba(14, 165, 233, 0.15) !important;
+    box-shadow: 0 4px 16px rgba(14, 165, 233, 0.06),
+        0 2px 8px rgba(0, 0, 0, 0.03) !important;
+    transition: all 400ms cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+.tool-card:hover {
+    transform: translateY(-8px) scale(1.02) !important;
+    box-shadow: 0 20px 40px rgba(14, 165, 233, 0.15),
+        0 12px 24px rgba(14, 165, 233, 0.10) !important;
+    border-color: rgba(14, 165, 233, 0.4) !important;
+    background: rgba(255, 255, 255, 1) !important;
+}
+
+/* Tool image containers with blue gradient */
+.tool-image-container {
+    background: linear-gradient(135deg, #E0F2FE, #BAE6FD) !important;
+}
+
+/* Enhanced tutorial cards */
+.tutorial-card {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    border-radius: 20px !important;
+    border: 1px solid rgba(14, 165, 233, 0.15) !important;
+    box-shadow: 0 4px 16px rgba(14, 165, 233, 0.06),
+        0 2px 8px rgba(0, 0, 0, 0.03) !important;
+    transition: all 400ms cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+.tutorial-card:hover {
+    transform: translateY(-8px) scale(1.02) !important;
+    box-shadow: 0 20px 40px rgba(245, 158, 11, 0.15),
+        0 12px 24px rgba(245, 158, 11, 0.10) !important;
+    border-color: rgba(245, 158, 11, 0.4) !important;
+    background: rgba(255, 255, 255, 1) !important;
+}
+
+/* Search input with blue accent */
+.search-input {
+    border-color: rgba(14, 165, 233, 0.2) !important;
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+}
+
+.search-input:focus {
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.1) !important;
+}
+
+/* Tag filters with blue accent */
+.tag {
+    background: rgba(14, 165, 233, 0.1) !important;
+    color: var(--color-primary) !important;
+    border: 1px solid rgba(14, 165, 233, 0.2) !important;
+}
+
+.tag:hover,
+.tag.active {
+    background: var(--color-primary) !important;
+    color: white !important;
+    border-color: var(--color-primary) !important;
+}
+
+/* Primary button with amber CTA */
+.btn-primary {
+    background: linear-gradient(135deg, #F59E0B, #D97706) !important;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3),
+        0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+.btn-primary:hover {
+    box-shadow: 0 8px 20px rgba(245, 158, 11, 0.4),
+        0 4px 8px rgba(0, 0, 0, 0.15) !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Featured badge */
+.badge-featured {
+    background: linear-gradient(135deg, #F59E0B, #D97706) !important;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3) !important;
+}
+
+/* Detail page enhancements */
+.detail-container {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(14, 165, 233, 0.15) !important;
+    box-shadow: 0 8px 32px rgba(14, 165, 233, 0.08) !important;
+}
+
+/* Markdown content styling */
+.markdown-content code {
+    background: rgba(14, 165, 233, 0.1) !important;
+    border-color: rgba(14, 165, 233, 0.2) !important;
+    color: var(--color-primary) !important;
+}
+
+.markdown-content pre {
+    background: linear-gradient(135deg, #0F172A, #1E293B) !important;
+    border: 1px solid rgba(14, 165, 233, 0.2) !important;
+}
+
+.markdown-content a {
+    color: var(--color-primary) !important;
+}
+
+.markdown-content a:hover {
+    color: var(--color-secondary) !important;
+}
+
+/* Search section container */
+.search-section {
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(10px);
+    border-radius: 24px;
+    padding: var(--space-xl);
+    margin-bottom: var(--space-3xl);
+    border: 1px solid rgba(14, 165, 233, 0.1);
+}
+
+/* Tutorial detail article */
+.tutorial-article {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(14, 165, 233, 0.15) !important;
+    box-shadow: 0 8px 32px rgba(14, 165, 233, 0.08) !important;
+}
+
+/* Back button */
+.btn-back {
+    background: rgba(255, 255, 255, 0.95) !important;
+    border-color: rgba(14, 165, 233, 0.2) !important;
+}
+
+.btn-back:hover {
+    background: rgba(14, 165, 233, 0.1) !important;
+    border-color: var(--color-primary) !important;
+    color: var(--color-primary) !important;
+}
+
+/* Footer */
+.footer {
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(20px) saturate(180%) !important;
+    border-top: 1px solid rgba(14, 165, 233, 0.15) !important;
+}
+
+/* Loading spinner */
+.spinner {
+    border-color: rgba(14, 165, 233, 0.2) !important;
+    border-top-color: var(--color-primary) !important;
+}
+
+/* Subtle glow effects */
+.tool-card-title,
+.tutorial-card-title {
+    color: var(--color-text);
+    text-shadow: 0 0 20px rgba(14, 165, 233, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .search-section {
+        padding: var(--space-lg);
+        border-radius: 16px;
+    }
+}

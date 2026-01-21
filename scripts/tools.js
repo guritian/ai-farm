@@ -176,14 +176,14 @@ function renderTools() {
  */
 function createToolCard(tool) {
     const featuredBadge = tool.is_featured ? '<span class="badge-featured">推荐</span>' : '';
-    const imageUrl = tool.image_url || 'https://via.placeholder.com/400x300?text=AI+Tool';
+    const imageUrl = tool.image_url || 'images/placeholders/tool.png';
     const tags = tool.tags ? tool.tags.slice(0, 4) : [];
 
     return `
         <div class="tool-card" onclick="showToolDetails('${tool.id}')">
             <div class="tool-image-container">
                 ${featuredBadge}
-                <img src="${imageUrl}" alt="${tool.name}" class="tool-image" onerror="this.src='https://via.placeholder.com/400x300?text=AI+Tool'">
+                <img src="${imageUrl}" alt="${tool.name}" class="tool-image" onerror="this.src='images/placeholders/tool.png'">
             </div>
             <div class="tool-content">
                 <div class="tool-header">
@@ -205,60 +205,234 @@ function createToolCard(tool) {
 }
 
 /**
- * 显示工具详情
+ * 显示工具详情页面
  */
 window.showToolDetails = function (toolId) {
     const tool = allTools.find(t => t.id === toolId);
     if (!tool) return;
 
-    const modal = document.getElementById('toolModal');
-    const modalBody = document.getElementById('modalBody');
+    // Hide main content, show detail page
+    document.querySelector('.main').style.display = 'none';
+    const detailPage = document.getElementById('toolDetailPage');
+    detailPage.style.display = 'block';
+    window.scrollTo(0, 0);
 
-    const features = tool.features && tool.features.length > 0
-        ? `<ul class="feature-list">
-            ${tool.features.map(f => `<li>${f}</li>`).join('')}
-          </ul>`
-        : '<p>暂无功能列表</p>';
+    // Populate header
+    document.getElementById('detailLogo').src = tool.image_url || 'images/placeholders/tool.png';
+    document.getElementById('detailLogo').alt = tool.name;
+    document.getElementById('detailTitle').textContent = tool.name;
+    document.getElementById('detailTagline').textContent = tool.description;
+    document.getElementById('detailCTA').href = tool.url;
 
-    const tags = tool.tags ? tool.tags.map(tag => `<span class="tag">${tag}</span>`).join('') : '';
-    modalBody.innerHTML = `
-        <div class="modal-header">
-            <img src="${tool.image_url || 'https://via.placeholder.com/200'}" alt="${tool.name}" class="modal-image" onerror="this.src='https://via.placeholder.com/200'">
-            <div>
-                <h2 class="modal-title">${tool.name}</h2>
-                <div class="modal-tags">${tags}</div>
-            </div>
-        </div>
-        <div class="modal-section">
-            <h3>简介</h3>
-            <p>${tool.description}</p>
-        </div>
-        <div class="modal-section">
-            <h3>主要功能</h3>
-            ${features}
-        </div>
-        <div class="modal-section">
-            <h3>定价信息</h3>
-            <p style="color: var(--color-cta); font-weight: 600;">${tool.pricing || '价格未知'}</p>
-        </div>
-        <div class="modal-actions">
-            <a href="${tool.url}" target="_blank" rel="noopener" class="btn-primary btn-large">
-                访问 ${tool.name}
-            </a>
-        </div>
-    `;
+    // Populate gallery
+    renderGallery(tool);
 
-    modal.style.display = 'block';
-    document.body.style.overflow = 'hidden';
+    // Populate features
+    renderFeatures(tool);
+
+    // Populate tutorials
+    renderTutorials(tool);
+
+    // Populate pros & cons
+    renderProsAndCons(tool);
+
+    // Populate sidebar specs
+    renderSpecs(tool);
+
+    // Populate quick links
+    renderQuickLinks(tool);
+
+    // Populate alternatives
+    renderAlternatives(tool);
 };
 
 /**
- * 关闭模态框
+ * 隐藏详情页面，返回工具列表
+ */
+window.hideDetailPage = function () {
+    document.getElementById('toolDetailPage').style.display = 'none';
+    document.querySelector('.main').style.display = 'block';
+    window.scrollTo(0, 0);
+};
+
+/**
+ * 渲染图库
+ */
+function renderGallery(tool) {
+    const galleryEl = document.getElementById('detailGallery');
+
+    // Use screenshots if available, otherwise show main image
+    const screenshots = tool.screenshots || [tool.image_url];
+
+    if (!screenshots || screenshots.length === 0) {
+        galleryEl.innerHTML = '<p style="color: var(--color-text-secondary);">暂无图片</p>';
+        return;
+    }
+
+    galleryEl.innerHTML = screenshots.map(url => `
+        <img src="${url || 'images/placeholders/tutorial.png'}" 
+             alt="${tool.name} screenshot" 
+             class="gallery-image"
+             onerror="this.src='images/placeholders/tutorial.png'">
+    `).join('');
+}
+
+/**
+ * 渲染功能列表
+ */
+function renderFeatures(tool) {
+    const featuresEl = document.getElementById('detailFeatures');
+
+    const features = tool.features || [
+        '强大的 AI 能力',
+        '简单易用的界面',
+        '快速响应速度'
+    ];
+
+    featuresEl.innerHTML = features.map((feature, index) => `
+        <li class="feature-item">
+            <div class="feature-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+            <div class="feature-content">
+                <h4>功能 ${index + 1}</h4>
+                <p>${feature}</p>
+            </div>
+        </li>
+    `).join('');
+}
+
+/**
+ * 渲染教程
+ */
+function renderTutorials(tool) {
+    const tutorialsEl = document.getElementById('detailTutorials');
+
+    // Sample tutorials - in real app, this would come from database
+    const tutorials = tool.tutorials || [
+        {
+            title: '快速入门教程',
+            platform: 'Bilibili',
+            thumbnail: 'images/placeholders/tutorial.png',
+            url: '#'
+        },
+        {
+            title: '高级功能指南',
+            platform: 'YouTube',
+            thumbnail: 'images/placeholders/tutorial.png',
+            url: '#'
+        },
+        {
+            title: '官方文档',
+            platform: 'Docs',
+            thumbnail: 'images/placeholders/tutorial.png',
+            url: tool.url
+        }
+    ];
+
+    tutorialsEl.innerHTML = tutorials.map(tutorial => `
+        <a href="${tutorial.url}" target="_blank" rel="noopener" class="tutorial-card">
+            <img src="${tutorial.thumbnail}" alt="${tutorial.title}" class="tutorial-thumbnail">
+            <div class="tutorial-content">
+                <span class="tutorial-platform">${tutorial.platform}</span>
+                <h4 class="tutorial-title">${tutorial.title}</h4>
+            </div>
+        </a>
+    `).join('');
+}
+
+/**
+ * 渲染优缺点
+ */
+function renderProsAndCons(tool) {
+    const prosEl = document.getElementById('detailPros');
+    const consEl = document.getElementById('detailCons');
+
+    const pros = tool.pros || [
+        '功能强大且全面',
+        '用户界面友好',
+        '响应速度快',
+        '文档完善'
+    ];
+
+    const cons = tool.cons || [
+        '价格相对较高',
+        '学习曲线略陡',
+        '某些功能需要付费'
+    ];
+
+    prosEl.innerHTML = pros.map(pro => `<li>${pro}</li>`).join('');
+    consEl.innerHTML = cons.map(con => `<li>${con}</li>`).join('');
+}
+
+/**
+ * 渲染关键参数
+ */
+function renderSpecs(tool) {
+    document.getElementById('specPricing').textContent = tool.pricing || '免费/付费';
+    document.getElementById('specPlatform').textContent = tool.platform || 'Web / iOS / Android';
+    document.getElementById('specLanguage').textContent = tool.language || '中文 / English';
+}
+
+/**
+ * 渲染快速链接
+ */
+function renderQuickLinks(tool) {
+    const quickLinksEl = document.getElementById('quickLinks');
+
+    const quickLinks = tool.quick_links || [
+        { label: '官方 API 文档', url: tool.url + '/docs' },
+        { label: '官方 Discord 社区', url: tool.url + '/community' },
+        { label: 'GitHub 仓库', url: 'https://github.com' }
+    ];
+
+    quickLinksEl.innerHTML = quickLinks.map(link => `
+        <li class="quick-link-item">
+            <a href="${link.url}" target="_blank" rel="noopener">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                ${link.label}
+            </a>
+        </li>
+    `).join('');
+}
+
+/**
+ * 渲染相似工具
+ */
+function renderAlternatives(tool) {
+    const alternativesEl = document.getElementById('detailAlternatives');
+
+    // Find similar tools (same tags)
+    const alternatives = allTools
+        .filter(t => t.id !== tool.id && t.tags && tool.tags &&
+            t.tags.some(tag => tool.tags.includes(tag)))
+        .slice(0, 3);
+
+    if (alternatives.length === 0) {
+        alternativesEl.innerHTML = '<p style="color: var(--color-text-secondary); font-size: 0.875rem;">暂无相似工具</p>';
+        return;
+    }
+
+    alternativesEl.innerHTML = alternatives.map(alt => `
+        <div class="alternative-item" onclick="showToolDetails('${alt.id}')">
+            <img src="${alt.image_url || 'images/placeholders/tool.png'}" 
+                 alt="${alt.name}" 
+                 class="alternative-icon"
+                 onerror="this.src='images/placeholders/tool.png'">
+            <span class="alternative-name">${alt.name}</span>
+        </div>
+    `).join('');
+}
+
+/**
+ * 关闭模态框 (保留向后兼容)
  */
 window.closeModal = function () {
-    const modal = document.getElementById('toolModal');
-    modal.style.display = 'none';
-    document.body.style.overflow = 'auto';
+    hideDetailPage();
 };
 
 /**
