@@ -20,11 +20,23 @@
     <link rel="stylesheet" href="/styles/guestbook.css">
     <link rel="stylesheet" href="/styles/weekreport.css">
 
-    <!-- Marked.js  - Markdown Renderer -->
+    <!-- Marked.js  - Markdown Renderer (with fallback) -->
     <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
+    <script>
+        // Fallback for marked.js if jsdelivr fails
+        if (typeof marked === 'undefined') {
+            document.write('<script src="https://unpkg.com/marked@11.1.1/marked.min.js"><\/script>');
+        }
+    </script>
 
-    <!-- Supabase SDK -->
+    <!-- Supabase SDK (with fallback) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Fallback for Supabase SDK if jsdelivr fails
+        if (typeof supabase === 'undefined') {
+            document.write('<script src="https://unpkg.com/@supabase/supabase-js@2"><\/script>');
+        }
+    </script>
 </head>
 
 <body>

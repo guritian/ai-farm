@@ -52,32 +52,6 @@
     overflow: hidden;
 }
 
-.weekreport-card-thumbnail::before {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 64px;
-    height: 64px;
-    background: rgba(255, 255, 255, 0.9);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.weekreport-card-thumbnail::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-40%, -50%);
-    border-left: 20px solid #0EA5E9;
-    border-top: 12px solid transparent;
-    border-bottom: 12px solid transparent;
-}
-
 .weekreport-card-play-icon {
     position: absolute;
     top: 50%;

@@ -18,8 +18,14 @@
     <link rel="stylesheet" href="/styles/admin.css">
     <link rel="stylesheet" href="/styles/admin-tabs.css">
 
-    <!-- Supabase SDK -->
+    <!-- Supabase SDK (with fallback) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Fallback for Supabase SDK if jsdelivr fails
+        if (typeof supabase === 'undefined') {
+            document.write('<script src="https://unpkg.com/@supabase/supabase-js@2"><\/script>');
+        }
+    </script>
 </head>
 
 <body>

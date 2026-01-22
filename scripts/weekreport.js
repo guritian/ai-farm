@@ -97,10 +97,12 @@ function renderWeekreportList(reports) {
 
 function createWeekreportCard(report) {
     const formattedDate = formatDate(report.published_at);
+    const thumbnail = getVideoThumbnail(report.video_url);
+    const thumbnailStyle = thumbnail ? `background-image: url('${thumbnail}'); background-size: cover; background-position: center;` : '';
 
     return `
         <article class="weekreport-card" data-id="${report.id}">
-            <div class="weekreport-card-thumbnail">
+            <div class="weekreport-card-thumbnail" style="${thumbnailStyle}">
                 <div class="weekreport-card-play-icon">
                     <svg viewBox="0 0 24 24" fill="currentColor">
                         <path d="M8 5v14l11-7z"/>
@@ -222,6 +224,34 @@ function getVideoEmbedUrl(url) {
 
     // 返回原始链接
     return url;
+}
+
+/**
+ * 获取视频封面图
+ * YouTube: 使用 img.youtube.com/vi/{VIDEO_ID}/hqdefault.jpg
+ * Bilibili: 暂不支持自动获取，使用渐变占位
+ */
+function getVideoThumbnail(url) {
+    if (!url) return null;
+
+    // YouTube 嵌入链接
+    let youtubeMatch = url.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/);
+    if (youtubeMatch) {
+        return `https://img.youtube.com/vi/${youtubeMatch[1]}/hqdefault.jpg`;
+    }
+
+    // YouTube 常规链接
+    youtubeMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/);
+    if (youtubeMatch) {
+        return `https://img.youtube.com/vi/${youtubeMatch[1]}/hqdefault.jpg`;
+    }
+
+    // Bilibili - 无法直接获取封面，返回 null 使用默认渐变
+    if (url.includes('bilibili.com') || url.includes('player.bilibili.com')) {
+        return null;
+    }
+
+    return null;
 }
 
 /**
