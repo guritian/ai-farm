@@ -873,6 +873,235 @@
 }
 
 /* =====================================================
+   Two-Column Guestbook Layout
+   ===================================================== */
+.guestbook-layout {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 24px;
+    position: relative;
+}
+
+.guestbook-main {
+    min-width: 0;
+}
+
+.guestbook-main .messages-section {
+    max-width: none;
+    padding: 0;
+}
+
+/* Sidebar */
+.guestbook-sidebar {
+    position: sticky;
+    top: 100px;
+    height: fit-content;
+}
+
+/* Write Message Button */
+.write-message-btn {
+    display: none;
+    width: 100%;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, var(--gb-primary), var(--gb-primary-dark));
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--gb-transition);
+    box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+}
+
+.write-message-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(14, 165, 233, 0.4);
+}
+
+.write-message-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+/* Sidebar Form Panel */
+.sidebar-form-panel {
+    background: var(--gb-card-bg);
+    backdrop-filter: blur(20px);
+    border-radius: var(--gb-radius);
+    padding: 24px;
+    box-shadow: var(--gb-shadow);
+    border: 1px solid var(--gb-border);
+    position: relative;
+    overflow: hidden;
+}
+
+.sidebar-form-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--gb-primary), var(--gb-accent));
+}
+
+.sidebar-form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.sidebar-form-header h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gb-text);
+    margin: 0;
+}
+
+.close-form-btn {
+    display: none;
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all var(--gb-transition);
+    align-items: center;
+    justify-content: center;
+}
+
+.close-form-btn:hover {
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.close-form-btn svg {
+    width: 16px;
+    height: 16px;
+    color: var(--gb-text-muted);
+}
+
+/* Sidebar Form Adjustments */
+.sidebar-form-panel .guestbook-form {
+    gap: 16px;
+}
+
+.sidebar-form-panel .input-group textarea {
+    min-height: 100px;
+}
+
+.sidebar-form-panel .form-footer {
+    flex-direction: column;
+    gap: 12px;
+}
+
+.sidebar-form-panel .form-actions {
+    width: 100%;
+    justify-content: space-between;
+}
+
+.sidebar-form-panel .btn-submit {
+    flex: 1;
+}
+
+.sidebar-form-panel .form-note {
+    font-size: 0.8rem;
+}
+
+/* Mobile: Collapsed sidebar with floating button */
+@media (max-width: 1024px) {
+    .guestbook-layout {
+        grid-template-columns: 1fr;
+        padding: 0 16px;
+    }
+
+    .guestbook-sidebar {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        left: 24px;
+        top: auto;
+        z-index: 100;
+    }
+
+    .write-message-btn {
+        display: flex;
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        width: auto;
+        padding: 16px 28px;
+        z-index: 99;
+    }
+
+    .sidebar-form-panel {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        max-height: 80vh;
+        overflow-y: auto;
+        border-radius: var(--gb-radius) var(--gb-radius) 0 0;
+        padding: 24px;
+        z-index: 101;
+        animation: slideUp 300ms ease;
+    }
+
+    .sidebar-form-panel.visible {
+        display: block;
+    }
+
+    .close-form-btn {
+        display: flex;
+    }
+
+    /* Overlay when form is open */
+    .guestbook-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 100;
+        animation: fadeIn 200ms ease;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* =====================================================
    Reduced Motion
    ===================================================== */
 @media (prefers-reduced-motion: reduce) {
