@@ -20,21 +20,21 @@
     <link rel="stylesheet" href="/styles/guestbook.css">
     <link rel="stylesheet" href="/styles/weekreport.css">
 
-    <!-- Marked.js  - Markdown Renderer (with fallback) -->
-    <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
+    <!-- Marked.js - Markdown Renderer (local with CDN fallback) -->
+    <script src="/scripts/lib/marked.min.js"></script>
     <script>
-        // Fallback for marked.js if jsdelivr fails
+        // Fallback to CDN if local file fails
         if (typeof marked === 'undefined') {
-            document.write('<script src="https://unpkg.com/marked@11.1.1/marked.min.js"><\/script>');
+            document.write('<script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"><\/script>');
         }
     </script>
 
-    <!-- Supabase SDK (with fallback) -->
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Supabase SDK (local with CDN fallback) -->
+    <script src="/scripts/lib/supabase.min.js"></script>
     <script>
-        // Fallback for Supabase SDK if jsdelivr fails
+        // Fallback to CDN if local file fails
         if (typeof supabase === 'undefined') {
-            document.write('<script src="https://unpkg.com/@supabase/supabase-js@2"><\/script>');
+            document.write('<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"><\/script>');
         }
     </script>
 </head>

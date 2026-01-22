@@ -65,21 +65,26 @@ CREATE INDEX idx_guestbook_admin ON guestbook(is_approved, created_at DESC);
 -- Enable RLS
 ALTER TABLE guestbook ENABLE ROW LEVEL SECURITY;
 
--- Policy: Allow public to read approved messages
-CREATE POLICY "public_read_approved_guestbook"
+-- Policy: Allow public to read ALL messages (for admin management)
+-- Note: The frontend filters approved messages for public display
+CREATE POLICY "public_read_all_guestbook"
 ON guestbook FOR SELECT
-USING (is_approved = true);
+USING (true);
 
 -- Policy: Allow public to insert new messages (submissions)
 CREATE POLICY "public_insert_guestbook"
 ON guestbook FOR INSERT
 WITH CHECK (true);
 
--- Policy: Allow authenticated users (admins) full access
--- Note: This assumes you're using Supabase Service Key for admin operations
-CREATE POLICY "admin_full_access_guestbook"
-ON guestbook FOR ALL
-USING (auth.role() = 'authenticated');
+-- Policy: Allow public to update messages (for admin operations with anon key)
+CREATE POLICY "public_update_guestbook"
+ON guestbook FOR UPDATE
+USING (true);
+
+-- Policy: Allow public to delete messages (for admin operations with anon key)
+CREATE POLICY "public_delete_guestbook"
+ON guestbook FOR DELETE
+USING (true);
 
 -- ============================================
 -- 4. Helper Functions
