@@ -86,13 +86,16 @@ async function loadTutorials() {
 // ============================================
 // 渲染教程表格
 // ============================================
-tbody.innerHTML = tutorials.map((tutorial, index) => {
-    const typeLabel = getTypeLabel(tutorial.content_type);
-    const toolName = tutorial.ai_tools?.name || '-';
-    const featuredBadge = tutorial.is_featured ? '★' : '';
-    const date = new Date(tutorial.created_at).toLocaleDateString('zh-CN');
+function renderTutorialsTable(tutorials) {
+    const tbody = document.getElementById('tutorialsTableBody');
 
-    return `
+    tbody.innerHTML = tutorials.map((tutorial, index) => {
+        const typeLabel = getTypeLabel(tutorial.content_type);
+        const toolName = tutorial.ai_tools?.name || '-';
+        const featuredBadge = tutorial.is_featured ? '★' : '';
+        const date = new Date(tutorial.created_at).toLocaleDateString('zh-CN');
+
+        return `
             <tr>
                 <td>
                     <div class="sort-controls">
@@ -131,7 +134,8 @@ tbody.innerHTML = tutorials.map((tutorial, index) => {
                 </td>
             </tr>
         `;
-}).join('');
+    }).join('');
+}
 
 // ============================================
 // 获取类型标签

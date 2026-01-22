@@ -724,23 +724,29 @@
             } else if (tabName === 'tutorials') {
                 document.getElementById('tutorialsTab').style.display = 'block';
                 // Initialize tutorials if not already done
-                if (!window.tutorialsInitialized) {
+                if (!window.tutorialsInitialized && typeof window.initTutorials === 'function') {
                     window.initTutorials();
                     window.tutorialsInitialized = true;
+                } else if (!window.tutorialsInitialized) {
+                    console.warn('initTutorials 函数未加载，请刷新页面');
                 }
             } else if (tabName === 'guestbook') {
                 document.getElementById('guestbookTab').style.display = 'block';
                 // Initialize guestbook if not already done
-                if (!window.guestbookInitialized) {
+                if (!window.guestbookInitialized && typeof window.initGuestbookAdmin === 'function') {
                     window.initGuestbookAdmin();
                     window.guestbookInitialized = true;
+                } else if (!window.guestbookInitialized) {
+                    console.warn('initGuestbookAdmin 函数未加载，请刷新页面');
                 }
             } else if (tabName === 'weekreport') {
                 document.getElementById('weekreportTab').style.display = 'block';
                 // Initialize weekreport if not already done
-                if (!window.weekreportInitialized) {
+                if (!window.weekreportInitialized && typeof window.initWeekreportAdmin === 'function') {
                     window.initWeekreportAdmin();
                     window.weekreportInitialized = true;
+                } else if (!window.weekreportInitialized) {
+                    console.warn('initWeekreportAdmin 函数未加载，请刷新页面');
                 }
             }
         }

@@ -11,6 +11,9 @@
 -- Step 1: Drop existing restrictive policies
 DROP POLICY IF EXISTS "public_read_approved_guestbook" ON guestbook;
 DROP POLICY IF EXISTS "admin_full_access_guestbook" ON guestbook;
+DROP POLICY IF EXISTS "public_read_all_guestbook" ON guestbook;
+DROP POLICY IF EXISTS "public_update_guestbook" ON guestbook;
+DROP POLICY IF EXISTS "public_delete_guestbook" ON guestbook;
 
 -- Step 2: Create new permissive policies
 
