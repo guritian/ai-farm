@@ -37,6 +37,7 @@ async function loadTools() {
         const { data, error } = await supabase
             .from('ai_tools')
             .select('*')
+            .order('display_order', { ascending: true })
             .order('is_featured', { ascending: false })
             .order('created_at', { ascending: false });
 

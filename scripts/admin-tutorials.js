@@ -62,6 +62,7 @@ async function loadTutorials() {
                     name
                 )
             `)
+            .order('display_order', { ascending: true })
             .order('created_at', { ascending: false });
 
         if (error) throw error;
@@ -85,17 +86,29 @@ async function loadTutorials() {
 // ============================================
 // 渲染教程表格
 // ============================================
-function renderTutorialsTable(tutorials) {
-    const tbody = document.getElementById('tutorialsTableBody');
+tbody.innerHTML = tutorials.map((tutorial, index) => {
+    const typeLabel = getTypeLabel(tutorial.content_type);
+    const toolName = tutorial.ai_tools?.name || '-';
+    const featuredBadge = tutorial.is_featured ? '★' : '';
+    const date = new Date(tutorial.created_at).toLocaleDateString('zh-CN');
 
-    tbody.innerHTML = tutorials.map(tutorial => {
-        const typeLabel = getTypeLabel(tutorial.content_type);
-        const toolName = tutorial.ai_tools?.name || '-';
-        const featuredBadge = tutorial.is_featured ? '★' : '';
-        const date = new Date(tutorial.created_at).toLocaleDateString('zh-CN');
-
-        return `
+    return `
             <tr>
+                <td>
+                    <div class="sort-controls">
+                        <button class="btn-sort" onclick="moveTutorialUp('${tutorial.id}')" title="上移" ${index === 0 ? 'disabled' : ''}>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 15l-6-6-6 6"/>
+                            </svg>
+                        </button>
+                        <span class="sort-order">${tutorial.display_order || index + 1}</span>
+                        <button class="btn-sort" onclick="moveTutorialDown('${tutorial.id}')" title="下移" ${index === tutorials.length - 1 ? 'disabled' : ''}>
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M6 9l6 6 6-6"/>
+                            </svg>
+                        </button>
+                    </div>
+                </td>
                 <td><strong>${escapeHtml(tutorial.title)}</strong></td>
                 <td><span class="type-badge type-${tutorial.content_type}">${typeLabel}</span></td>
                 <td>${escapeHtml(tutorial.author)}</td>
@@ -118,8 +131,7 @@ function renderTutorialsTable(tutorials) {
                 </td>
             </tr>
         `;
-    }).join('');
-}
+}).join('');
 
 // ============================================
 // 获取类型标签
@@ -408,7 +420,6 @@ function escapeHtml(text) {
     return div.innerHTML;
 }
 
-// 导出到全局
 window.initTutorials = initTutorials;
 window.openAddTutorialForm = openAddTutorialForm;
 window.openEditTutorialForm = openEditTutorialForm;
@@ -418,3 +429,61 @@ window.confirmDeleteTutorial = confirmDeleteTutorial;
 window.closeTutorialModal = closeTutorialModal;
 window.closeTutorialDeleteModal = closeTutorialDeleteModal;
 window.clearTutorialFilters = clearTutorialFilters;
+
+// ============================================
+// 排序功能
+// ============================================
+
+/**
+ * 上移教程
+ */
+window.moveTutorialUp = async function (id) {
+    const index = currentTutorials.findIndex(t => t.id === id);
+    if (index <= 0) return;
+
+    const current = currentTutorials[index];
+    const prev = currentTutorials[index - 1];
+
+    await swapTutorialOrder(current, prev);
+};
+
+/**
+ * 下移教程
+ */
+window.moveTutorialDown = async function (id) {
+    const index = currentTutorials.findIndex(t => t.id === id);
+    if (index < 0 || index >= currentTutorials.length - 1) return;
+
+    const current = currentTutorials[index];
+    const next = currentTutorials[index + 1];
+
+    await swapTutorialOrder(current, next);
+};
+
+/**
+ * 交换两个教程的顺序
+ */
+async function swapTutorialOrder(t1, t2) {
+    const order1 = t1.display_order || 0;
+    const order2 = t2.display_order || 0;
+
+    try {
+        const supabase = window.supabaseAdmin;
+
+        await supabase
+            .from('tutorials')
+            .update({ display_order: order2 })
+            .eq('id', t1.id);
+
+        await supabase
+            .from('tutorials')
+            .update({ display_order: order1 })
+            .eq('id', t2.id);
+
+        await loadTutorials();
+        showToast('顺序已更新');
+    } catch (error) {
+        console.error('❌ 更新顺序失败:', error);
+        showToast('更新顺序失败: ' + error.message, 'error');
+    }
+}

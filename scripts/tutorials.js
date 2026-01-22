@@ -45,6 +45,7 @@ export async function loadTutorials() {
                     image_url
                 )
             `)
+            .order('display_order', { ascending: true })
             .order('created_at', { ascending: false });
 
         if (error) throw error;

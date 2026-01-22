@@ -133,6 +133,7 @@ async function loadTools() {
         const { data, error } = await supabaseAdmin
             .from('ai_tools')
             .select('*')
+            .order('display_order', { ascending: true })
             .order('created_at', { ascending: false });
 
         if (error) throw error;
@@ -164,8 +165,23 @@ function renderToolsTable() {
 
     emptyState.style.display = 'none';
 
-    tbody.innerHTML = filteredTools.map(tool => `
+    tbody.innerHTML = filteredTools.map((tool, index) => `
         <tr>
+            <td>
+                <div class="sort-controls">
+                    <button class="btn-sort" onclick="moveToolUp('${tool.id}')" title="上移" ${index === 0 ? 'disabled' : ''}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 15l-6-6-6 6"/>
+                        </svg>
+                    </button>
+                    <span class="sort-order">${tool.display_order || index + 1}</span>
+                    <button class="btn-sort" onclick="moveToolDown('${tool.id}')" title="下移" ${index === filteredTools.length - 1 ? 'disabled' : ''}>
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M6 9l6 6 6-6"/>
+                        </svg>
+                    </button>
+                </div>
+            </td>
             <td><div class="tool-name">${escapeHtml(tool.name)}</div></td>
             <td><div class="tool-description">${escapeHtml(tool.description)}</div></td>
             <td>
@@ -504,3 +520,62 @@ function showToast(message, type = 'success') {
 
 // 暴露到全局，供其他脚本使用
 window.showToast = showToast;
+
+// ==================================================
+// 排序功能
+// ==================================================
+
+/**
+ * 上移工具
+ */
+window.moveToolUp = async function (toolId) {
+    const index = allTools.findIndex(t => t.id === toolId);
+    if (index <= 0) return;
+
+    const current = allTools[index];
+    const prev = allTools[index - 1];
+
+    await swapToolOrder(current, prev);
+};
+
+/**
+ * 下移工具
+ */
+window.moveToolDown = async function (toolId) {
+    const index = allTools.findIndex(t => t.id === toolId);
+    if (index < 0 || index >= allTools.length - 1) return;
+
+    const current = allTools[index];
+    const next = allTools[index + 1];
+
+    await swapToolOrder(current, next);
+};
+
+/**
+ * 交换两个工具的顺序
+ */
+async function swapToolOrder(tool1, tool2) {
+    const order1 = tool1.display_order || 0;
+    const order2 = tool2.display_order || 0;
+
+    try {
+        // 更新第一个工具的顺序
+        await supabaseAdmin
+            .from('ai_tools')
+            .update({ display_order: order2 })
+            .eq('id', tool1.id);
+
+        // 更新第二个工具的顺序
+        await supabaseAdmin
+            .from('ai_tools')
+            .update({ display_order: order1 })
+            .eq('id', tool2.id);
+
+        // 重新加载
+        await loadTools();
+        showToast('顺序已更新');
+    } catch (error) {
+        console.error('❌ 更新顺序失败:', error);
+        showToast('更新顺序失败: ' + error.message, 'error');
+    }
+}

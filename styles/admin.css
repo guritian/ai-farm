@@ -367,6 +367,49 @@
     justify-content: flex-end;
 }
 
+/* ===================================
+   Sort Controls
+   =================================== */
+.sort-controls {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-sort {
+    width: 24px;
+    height: 24px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--color-background);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: all 150ms ease;
+    color: var(--color-text-secondary);
+}
+
+.btn-sort:hover:not(:disabled) {
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: white;
+}
+
+.btn-sort:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.sort-order {
+    min-width: 24px;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+}
+
 .loading-row {
     text-align: center;
     padding: var(--space-3xl) !important;
