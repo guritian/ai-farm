@@ -57,6 +57,21 @@
                     </svg>
                     教程管理
                 </button>
+                <button class="tab-btn" onclick="switchAdminTab('guestbook')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                    留言板管理
+                </button>
+                <button class="tab-btn" onclick="switchAdminTab('weekreport')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    周报管理
+                </button>
             </div>
         </div>
     </nav>
@@ -209,8 +224,238 @@
                 </section>
             </div>
 
+            <!-- Guestbook Management Tab Content -->
+            <div id="guestbookTab" class="tab-content" style="display: none;">
+                <!-- Guestbook Management Section -->
+                <section class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">留言板管理</h2>
+                        <div class="header-actions-group">
+                            <span id="guestbookCount" class="count-badge"></span>
+                        </div>
+                    </div>
+
+                    <!-- Search and Filter -->
+                    <div class="toolbar">
+                        <div class="search-box">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <circle cx="11" cy="11" r="8" />
+                                <path d="M21 21l-4.35-4.35" stroke-linecap="round" />
+                            </svg>
+                            <input type="text" id="guestbookSearchInput" placeholder="搜索作者或内容..." class="search-input"
+                                oninput="onGuestbookSearchInput()">
+                        </div>
+                        <select id="guestbookStatusFilter" class="status-filter" onchange="onGuestbookFilterChange()">
+                            <option value="all">全部留言</option>
+                            <option value="pending">待审核</option>
+                            <option value="approved">已审核</option>
+                            <option value="featured">已置顶</option>
+                        </select>
+                        <button onclick="clearGuestbookFilters()" class="btn-secondary">清除筛选</button>
+                    </div>
+
+                    <!-- Batch Actions -->
+                    <div id="guestbookBatchActions" class="batch-actions" style="display: none;">
+                        <span class="selected-count">已选 <span id="guestbookSelectedCount">0</span> 条</span>
+                        <button onclick="batchApproveGuestbook()" class="btn-small btn-success">批量审核</button>
+                        <button onclick="batchDeleteGuestbook()" class="btn-small btn-danger">批量删除</button>
+                    </div>
+
+                    <!-- Guestbook Table -->
+                    <div class="table-container">
+                        <table class="tools-table">
+                            <thead>
+                                <tr>
+                                    <th><input type="checkbox" id="guestbookSelectAll"
+                                            onchange="toggleGuestbookSelectAll()"></th>
+                                    <th>作者</th>
+                                    <th>内容</th>
+                                    <th>点赞</th>
+                                    <th>时间</th>
+                                    <th>状态</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="guestbookTableBody">
+                                <tr>
+                                    <td colspan="7" class="loading-row">
+                                        <div class="spinner"></div>
+                                        <p>加载中...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="guestbookEmptyState" class="empty-state" style="display: none;">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                        </svg>
+                        <h3>暂无留言</h3>
+                        <p>还没有用户留言</p>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Weekreport Management Tab Content -->
+            <div id="weekreportTab" class="tab-content" style="display: none;">
+                <section class="section">
+                    <div class="section-header">
+                        <h2 class="section-title">周报管理</h2>
+                        <button class="btn-primary" onclick="openAddWeekreportForm()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19" stroke-linecap="round" />
+                                <line x1="5" y1="12" x2="19" y2="12" stroke-linecap="round" />
+                            </svg>
+                            添加周报
+                        </button>
+                    </div>
+
+                    <!-- Weekreport Table -->
+                    <div class="table-container">
+                        <table class="tools-table">
+                            <thead>
+                                <tr>
+                                    <th>标题</th>
+                                    <th>视频链接</th>
+                                    <th>发布时间</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="weekreportTableBody">
+                                <tr>
+                                    <td colspan="4" class="loading-row">
+                                        <div class="spinner"></div>
+                                        <p>加载中...</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="weekreportEmptyState" class="empty-state" style="display: none;">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                            <line x1="16" y1="2" x2="16" y2="6" />
+                            <line x1="8" y1="2" x2="8" y2="6" />
+                            <line x1="3" y1="10" x2="21" y2="10" />
+                        </svg>
+                        <h3>暂无周报</h3>
+                        <p>点击"添加周报"按钮创建第一个周报</p>
+                        <button onclick="openAddWeekreportForm()" class="btn-primary">添加第一个周报</button>
+                    </div>
+                </section>
+            </div>
+
         </div>
     </main>
+
+    <!-- Weekreport Add/Edit Modal -->
+    <div id="weekreportModal" class="modal" style="display: none;">
+        <div class="modal-overlay" onclick="closeWeekreportModal()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="weekreportModalTitle">添加周报</h2>
+                <button class="modal-close" onclick="closeWeekreportModal()" aria-label="关闭">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" />
+                    </svg>
+                </button>
+            </div>
+
+            <form id="weekreportForm" class="tool-form" onsubmit="handleWeekreportSubmit(event)">
+                <input type="hidden" id="weekreportId" value="">
+
+                <div class="form-group">
+                    <label for="weekreportTitle">周报标题 <span class="required">*</span></label>
+                    <input type="text" id="weekreportTitle" required placeholder="例：AI 周报 #1 - 2026年1月第三周">
+                </div>
+
+                <div class="form-group">
+                    <label for="weekreportVideoUrl">视频链接 <span class="required">*</span></label>
+                    <input type="url" id="weekreportVideoUrl" required
+                        placeholder="https://www.youtube.com/embed/xxx 或 https://player.bilibili.com/player.html?bvid=xxx">
+                    <small>支持 YouTube 和 Bilibili 嵌入链接</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="weekreportVideoPreview">视频预览</label>
+                    <div id="weekreportVideoPreview"
+                        style="width:100%; aspect-ratio: 16/9; background: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #999;">
+                        输入视频链接后点击预览
+                    </div>
+                    <button type="button" onclick="previewWeekreportVideo()" class="btn-secondary"
+                        style="margin-top: 8px;">
+                        预览视频
+                    </button>
+                </div>
+
+                <div class="form-group">
+                    <label for="weekreportContentMd">Markdown 内容</label>
+                    <textarea id="weekreportContentMd" rows="12" placeholder="## 本周 AI 热点
+
+### 1. 新工具推荐
+- 工具名称: 简短描述
+
+### 2. 使用心得
+..."></textarea>
+                    <small>支持 Markdown 语法，可留空</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="weekreportPublishedAt">发布时间</label>
+                    <input type="datetime-local" id="weekreportPublishedAt">
+                    <small>留空则使用当前时间</small>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" onclick="closeWeekreportModal()" class="btn-secondary">取消</button>
+                    <button type="submit" class="btn-primary" id="weekreportSubmitBtn">
+                        <span id="weekreportSubmitText">保存</span>
+                        <span id="weekreportSubmitLoading" style="display: none;">
+                            <div class="spinner-small"></div>
+                            保存中...
+                        </span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Weekreport Delete Confirmation Modal -->
+    <div id="weekreportDeleteModal" class="modal" style="display: none;">
+        <div class="modal-overlay" onclick="closeWeekreportDeleteModal()"></div>
+        <div class="modal-content modal-small">
+            <div class="modal-header">
+                <h2>确认删除</h2>
+                <button class="modal-close" onclick="closeWeekreportDeleteModal()" aria-label="关闭">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6L6 18M6 6l12 12" stroke-linecap="round" />
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>确定要删除周报 "<span id="deleteWeekreportName"></span>" 吗？</p>
+                <p class="text-danger">此操作不可撤销！</p>
+            </div>
+            <div class="form-actions">
+                <button type="button" onclick="closeWeekreportDeleteModal()" class="btn-secondary">取消</button>
+                <button type="button" onclick="confirmDeleteWeekreport()" class="btn-danger" id="weekreportDeleteBtn">
+                    <span id="weekreportDeleteText">确认删除</span>
+                    <span id="weekreportDeleteLoading" style="display: none;">
+                        <div class="spinner-small"></div>
+                        删除中...
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
 
     <!-- Tutorial Add/Edit Modal -->
     <div id="tutorialModal" class="modal" style="display: none;">
@@ -475,6 +720,20 @@
                     window.initTutorials();
                     window.tutorialsInitialized = true;
                 }
+            } else if (tabName === 'guestbook') {
+                document.getElementById('guestbookTab').style.display = 'block';
+                // Initialize guestbook if not already done
+                if (!window.guestbookInitialized) {
+                    window.initGuestbookAdmin();
+                    window.guestbookInitialized = true;
+                }
+            } else if (tabName === 'weekreport') {
+                document.getElementById('weekreportTab').style.display = 'block';
+                // Initialize weekreport if not already done
+                if (!window.weekreportInitialized) {
+                    window.initWeekreportAdmin();
+                    window.weekreportInitialized = true;
+                }
             }
         }
     </script>
@@ -482,6 +741,8 @@
     <!-- Scripts -->
     <script type="module" src="/scripts/admin.js"></script>
     <script type="module" src="/scripts/admin-tutorials.js"></script>
+    <script type="module" src="/scripts/admin-guestbook.js"></script>
+    <script type="module" src="/scripts/admin-weekreport.js"></script>
 </body>
 
 </html>

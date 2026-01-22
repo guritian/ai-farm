@@ -1286,6 +1286,16 @@ body::before {
     white-space: nowrap;
     z-index: 1;
     border-radius: 9px;
+    text-decoration: none;
+}
+
+/* Ensure anchor elements with tab-btn class have no underline */
+a.tab-btn,
+a.tab-btn:hover,
+a.tab-btn:active,
+a.tab-btn:focus,
+a.tab-btn:visited {
+    text-decoration: none;
 }
 
 .tab-btn svg {

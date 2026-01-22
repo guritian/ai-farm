@@ -17,6 +17,8 @@
     <!-- Main Styles -->
     <link rel="stylesheet" href="/styles/main.css">
     <link rel="stylesheet" href="/styles/light-blue-theme.css">
+    <link rel="stylesheet" href="/styles/guestbook.css">
+    <link rel="stylesheet" href="/styles/weekreport.css">
 
     <!-- Marked.js  - Markdown Renderer -->
     <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
@@ -63,6 +65,22 @@
                         <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
                     </svg>
                     教程分享
+                </button>
+                <button class="tab-btn" data-tab="guestbook" onclick="switchTab('guestbook')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                    </svg>
+                    留言板
+                </button>
+                <button class="tab-btn" data-tab="weekreport" onclick="switchTab('weekreport')">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                        <polygon points="10 14 12 17 14 14" />
+                    </svg>
+                    AI 周报
                 </button>
             </nav>
 
@@ -198,6 +216,216 @@
                 </div>
             </div>
             <!-- End Tutorials Content -->
+
+            <!-- Guestbook Content -->
+            <div id="guestbookContent" class="content-section guestbook-page" style="display: none;">
+                <!-- Hero Section -->
+                <section class="page-hero">
+                    <div class="hero-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                    </div>
+                    <h2 class="page-title">分享你的想法</h2>
+                    <p class="page-description">
+                        无论是使用心得、功能建议，还是简单的问候，我们都期待听到你的声音
+                    </p>
+                </section>
+
+                <!-- Quick Submit Card -->
+                <section class="quick-submit-section">
+                    <div class="quick-submit-card">
+                        <div class="submit-header">
+                            <div class="avatar-placeholder" id="userAvatar">你</div>
+                            <div class="submit-prompt">
+                                <h3>写下你的留言</h3>
+                                <p>与社区分享你的故事</p>
+                            </div>
+                        </div>
+
+                        <form id="guestbook-form" class="guestbook-form">
+                            <div class="input-group">
+                                <label for="author">称呼</label>
+                                <input type="text" id="author" name="author" placeholder="你希望怎么称呼你？" maxlength="100"
+                                    required oninput="updateAvatar()">
+                                <span class="error-message" id="author-error"></span>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="content">留言内容</label>
+                                <textarea id="content" name="content" placeholder="说说你的想法、建议，或者只是打个招呼..." rows="4"
+                                    maxlength="2000" required></textarea>
+                                <span class="error-message" id="content-error"></span>
+                            </div>
+
+                            <div class="form-footer">
+                                <div class="char-indicator">
+                                    <div class="char-bar">
+                                        <div class="char-bar-fill" id="char-bar-fill" style="width: 0%"></div>
+                                    </div>
+                                    <span class="char-text" id="char-counter">0 / 2000</span>
+                                </div>
+
+                                <div class="form-actions">
+                                    <button type="reset" class="btn-clear">清空</button>
+                                    <button type="submit" class="btn-submit" id="submit-btn">
+                                        <span class="btn-text">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" stroke-linecap="round"
+                                                    stroke-linejoin="round" />
+                                            </svg>
+                                            发送
+                                        </span>
+                                        <span class="btn-loading" style="display: none;">
+                                            <span class="loading-spinner"></span>
+                                            发送中...
+                                        </span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <p class="form-note">
+                                留言提交后需要管理员审核，通过后将显示在下方
+                            </p>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- Messages Section -->
+                <section class="messages-section">
+                    <div class="section-header">
+                        <h3 class="section-title">
+                            大家都在说
+                            <span class="message-count" id="message-count">0</span>
+                        </h3>
+                        <div class="sort-controls">
+                            <button class="sort-btn active" data-sort="newest">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 5v14M19 12l-7 7-7-7" stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                最新
+                            </button>
+                            <button class="sort-btn" data-sort="popular">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path
+                                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                                最热
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div id="messages-loading" class="loading-state" style="display: none;">
+                        <div class="loading-spinner-large"></div>
+                        <p>正在加载留言...</p>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="messages-empty" class="empty-state" style="display: none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path
+                                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                                stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        <h3>还没有留言</h3>
+                        <p>成为第一个留言的人吧！</p>
+                    </div>
+
+                    <!-- Messages Grid -->
+                    <div id="messages-grid" class="messages-grid">
+                        <!-- Messages will be rendered here by JavaScript -->
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="pagination" id="pagination">
+                        <!-- Pagination will be rendered here -->
+                    </div>
+                </section>
+            </div>
+            <!-- End Guestbook Content -->
+
+            <!-- Weekreport Content -->
+            <div id="weekreportContent" class="content-section weekreport-page" style="display: none;">
+                <!-- List View -->
+                <div id="weekreport-list-view">
+                    <div class="section-header" style="margin-bottom: var(--space-lg);">
+                        <h2
+                            style="font-family: var(--font-heading); font-size: 1.5rem; font-weight: 600; color: var(--color-text);">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" style="vertical-align: middle; margin-right: 8px;">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                <line x1="16" y1="2" x2="16" y2="6" />
+                                <line x1="8" y1="2" x2="8" y2="6" />
+                                <line x1="3" y1="10" x2="21" y2="10" />
+                            </svg>
+                            AI 周报
+                        </h2>
+                        <p style="color: var(--color-text-secondary); margin-top: var(--space-sm);">每周精选 AI
+                            领域动态、工具推荐和使用心得</p>
+                    </div>
+
+                    <!-- Loading State -->
+                    <div id="weekreport-loading" class="weekreport-loading" style="display: none;">
+                        <div class="spinner"></div>
+                        <p>正在加载周报...</p>
+                    </div>
+
+                    <!-- Empty State -->
+                    <div id="weekreport-empty" class="weekreport-empty" style="display: none;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                            <line x1="16" y1="2" x2="16" y2="6" />
+                            <line x1="8" y1="2" x2="8" y2="6" />
+                            <line x1="3" y1="10" x2="21" y2="10" />
+                        </svg>
+                        <h3>暂无周报</h3>
+                        <p>敬请期待，精彩内容即将上线</p>
+                    </div>
+
+                    <!-- Weekreport List -->
+                    <div id="weekreport-list" class="weekreport-list">
+                        <!-- Weekreport cards will be rendered here -->
+                    </div>
+                </div>
+
+                <!-- Detail View -->
+                <div id="weekreport-detail-view" class="weekreport-detail" style="display: none;">
+                    <div class="weekreport-detail-header">
+                        <button class="weekreport-detail-back" onclick="backToWeekreportList()">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 12H5M12 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            返回列表
+                        </button>
+                        <h1 id="weekreport-detail-title" class="weekreport-detail-title"></h1>
+                        <div class="weekreport-detail-date">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                                <line x1="16" y1="2" x2="16" y2="6" />
+                                <line x1="8" y1="2" x2="8" y2="6" />
+                                <line x1="3" y1="10" x2="21" y2="10" />
+                            </svg>
+                            <span id="weekreport-detail-date"></span>
+                        </div>
+                    </div>
+
+                    <!-- Video Player -->
+                    <div id="weekreport-video-container" class="weekreport-video-container">
+                        <!-- Video iframe will be inserted here -->
+                    </div>
+
+                    <!-- Markdown Content -->
+                    <div class="weekreport-content">
+                        <div id="weekreport-detail-content" class="markdown-content">
+                            <!-- Markdown content will be rendered here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End Weekreport Content -->
         </div>
     </main>
 
@@ -344,10 +572,33 @@
         </div>
     </footer>
 
+    <!-- Success Toast -->
+    <div id="success-toast" class="toast" style="display: none;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke-linecap="round" stroke-linejoin="round" />
+            <polyline points="22 4 12 14.01 9 11.01" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <span id="toast-message"></span>
+    </div>
+
+    <!-- Avatar Update Script -->
+    <script>
+        function updateAvatar() {
+            const input = document.getElementById('author');
+            const avatar = document.getElementById('userAvatar');
+            if (input && avatar) {
+                const name = input.value.trim();
+                avatar.textContent = name ? name.charAt(0).toUpperCase() : '你';
+            }
+        }
+    </script>
+
     <!-- Scripts -->
     <script type="module" src="/scripts/supabase-client.js"></script>
     <script type="module" src="/scripts/tools.js"></script>
     <script type="module" src="/scripts/tutorials.js"></script>
+    <script type="module" src="/scripts/guestbook.js"></script>
+    <script type="module" src="/scripts/weekreport.js"></script>
 
     <!-- Tab Switching Script -->
     <script>
@@ -379,6 +630,16 @@
             if (tabName === 'tutorials' && window.loadTutorials) {
                 window.loadTutorials();
             }
+
+            // Load guestbook if switching to guestbook tab
+            if (tabName === 'guestbook' && window.loadGuestbook) {
+                window.loadGuestbook();
+            }
+
+            // Load weekreport if switching to weekreport tab
+            if (tabName === 'weekreport' && window.loadWeekreport) {
+                window.loadWeekreport();
+            }
         }
 
         // Handle initial hash on page load
@@ -386,6 +647,10 @@
             const hash = window.location.hash.substring(1);
             if (hash === 'tutorials') {
                 switchTab('tutorials');
+            } else if (hash === 'guestbook') {
+                switchTab('guestbook');
+            } else if (hash === 'weekreport') {
+                switchTab('weekreport');
             }
         });
     </script>

@@ -7,8 +7,8 @@
 ---
 
 **Project:** AI Farm
-**Generated:** 2026-01-20 17:30:35
-**Category:** Biotech / Life Sciences
+**Generated:** 2026-01-21 15:36:10
+**Category:** Social Media App
 
 ---
 
@@ -18,25 +18,19 @@
 
 | Role | Hex | CSS Variable |
 |------|-----|--------------|
-| Primary | `#3B82F6` | `--color-primary` |
-| Secondary | `#60A5FA` | `--color-secondary` |
+| Primary | `#7C3AED` | `--color-primary` |
+| Secondary | `#A78BFA` | `--color-secondary` |
 | CTA/Accent | `#F97316` | `--color-cta` |
-| Background | `#F8FAFC` | `--color-background` |
-| Text | `#1E293B` | `--color-text` |
+| Background | `#FAF5FF` | `--color-background` |
+| Text | `#4C1D95` | `--color-text` |
 
-**Color Notes:** Fresh Blue (#00B4D8) + Clean White + Green
+**Color Notes:** Community brand colors + Engagement accents
 
 ### Typography
 
-- **Heading Font:** Plus Jakarta Sans
-- **Body Font:** Plus Jakarta Sans
-- **Mood:** friendly, modern, saas, clean, approachable, professional
-- **Google Fonts:** [Plus Jakarta Sans + Plus Jakarta Sans](https://fonts.google.com/share?selection.family=Plus+Jakarta+Sans:wght@300;400;500;600;700)
-
-**CSS Import:**
-```css
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
-```
+- **Heading Font:** Inter
+- **Body Font:** Inter
+- **Mood:** Modern + Bold typography
 
 ### Spacing Variables
 
@@ -85,8 +79,8 @@
 /* Secondary Button */
 .btn-secondary {
   background: transparent;
-  color: #3B82F6;
-  border: 2px solid #3B82F6;
+  color: #7C3AED;
+  border: 2px solid #7C3AED;
   padding: 12px 24px;
   border-radius: 8px;
   font-weight: 600;
@@ -99,7 +93,7 @@
 
 ```css
 .card {
-  background: #F8FAFC;
+  background: #FAF5FF;
   border-radius: 12px;
   padding: 24px;
   box-shadow: var(--shadow-md);
@@ -125,9 +119,9 @@
 }
 
 .input:focus {
-  border-color: #3B82F6;
+  border-color: #7C3AED;
   outline: none;
-  box-shadow: 0 0 0 3px #3B82F620;
+  box-shadow: 0 0 0 3px #7C3AED20;
 }
 ```
 
@@ -163,18 +157,18 @@
 
 ### Page Pattern
 
-**Pattern Name:** Minimal Single Column
+**Pattern Name:** Community/Forum Landing
 
-- **Conversion Strategy:** Single CTA focus. Large typography. Lots of whitespace. No nav clutter. Mobile-first.
-- **CTA Placement:** Center, large CTA button
-- **Section Order:** 1. Hero headline, 2. Short description, 3. Benefit bullets (3 max), 4. CTA, 5. Footer
+- **Conversion Strategy:** Show active community (member count, posts today). Highlight benefits. Preview content. Easy onboarding.
+- **CTA Placement:** Join button prominent + After member showcase
+- **Section Order:** 1. Hero (community value prop), 2. Popular topics/categories, 3. Active members showcase, 4. Join CTA
 
 ---
 
 ## Anti-Patterns (Do NOT Use)
 
-- ❌ Flat design without depth
-- ❌ Text-heavy pages
+- ❌ Heavy skeuomorphism
+- ❌ Accessibility ignored
 
 ### Additional Forbidden Patterns
 
